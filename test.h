@@ -1,6 +1,9 @@
 #ifndef TEST_H
 #define TEST_H
 
-// TODO
+
+
+void BellmanFord();
+void AStar();
 
 #endif // TEST_H
