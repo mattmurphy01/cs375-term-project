@@ -6,6 +6,43 @@
 #include "aStar.h"
 using namespace std;
 
+vector<Node> createGraph(int numRows, int numCols, double defaultCost = 1.0) {
+    int numNodes = numRows * numCols;
+    vector<Node> graph(numNodes);
+
+    for (int i = 0; i < numNodes; ++i) {
+        graph[i].id = i;
+        int row = i / numCols;
+        int col = i % numCols;
+
+        // Connect to the left neighbor
+        if (col > 0) {
+            int leftNeighbor = i - 1;
+            graph[i].neighbors.push_back(make_pair(leftNeighbor, defaultCost));
+        }
+
+        // Connect to the right neighbor
+        if (col < numCols - 1) {
+            int rightNeighbor = i + 1;
+            graph[i].neighbors.push_back(make_pair(rightNeighbor, defaultCost));
+        }
+
+        // Connect to the top neighbor
+        if (row > 0) {
+            int topNeighbor = i - numCols;
+            graph[i].neighbors.push_back(make_pair(topNeighbor, defaultCost));
+        }
+
+        // Connect to the bottom neighbor
+        if (row < numRows - 1) {
+            int bottomNeighbor = i + numCols;
+            graph[i].neighbors.push_back(make_pair(bottomNeighbor, defaultCost));
+        }
+    }
+
+    return graph;
+}
+
 int main(int argc, char const *argv[]) {
     /* Bellman-Ford Algorithm */
     std::cout << "***** Bellman-Ford Algorithm test *****\n";
@@ -19,14 +56,60 @@ int main(int argc, char const *argv[]) {
     BellmanFord graph(V, E);
     
     // graph to test
-    graph.addEdge(0, 1, -1);
+    
+    /*
+    graph.addEdge(0, 1, 1);
     graph.addEdge(0, 2, 4);
     graph.addEdge(1, 2, 3);
     graph.addEdge(1, 3, 2);
     graph.addEdge(1, 4, 2);
     graph.addEdge(3, 2, 5);
-    graph.addEdge(3, 1, 1);
-    graph.addEdge(4, 3, -3);
+    graph.addEdge(3, 1, 2); // 3
+    graph.addEdge(4, 3, 3);
+    */
+
+    
+    graph.addEdge(0,2,6);
+    graph.addEdge(0,2,2);
+    graph.addEdge(1,2,2);
+    graph.addEdge(1,3,5);
+    graph.addEdge(2,3,2);
+    graph.addEdge(3,4,3);
+    
+
+    /*
+    graph.addEdge(0, 1, 7);
+    graph.addEdge(0, 2, 4);
+
+    graph.addEdge(1, 0, 7);
+    graph.addEdge(1, 3, 2);
+    graph.addEdge(1, 4, 5);
+
+    graph.addEdge(2, 0, 4);
+    graph.addEdge(2, 5, 8);
+
+    graph.addEdge(3, 1, 2);
+    graph.addEdge(3, 6, 9);
+
+    graph.addEdge(4, 1, 5);
+    graph.addEdge(4, 7, 6);
+
+    graph.addEdge(5, 2, 8);
+    graph.addEdge(5, 8, 3);
+
+    graph.addEdge(6, 3, 9);
+    graph.addEdge(6, 9, 1);
+
+    graph.addEdge(7, 4, 6);
+    graph.addEdge(7, 8, 7);
+
+    graph.addEdge(8, 5, 3);
+    graph.addEdge(8, 7, 7);
+    graph.addEdge(8, 9, 4);
+
+    graph.addEdge(9, 6, 1);
+    graph.addEdge(9, 8, 4);
+    */
 
     int from = 0;   // source node
  
@@ -54,30 +137,119 @@ int main(int argc, char const *argv[]) {
 
     // start runtime
     auto start2 = std::chrono::high_resolution_clock::now();
-
+    
     int grid[ROW][COL]
-        = { { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1 },
-            { 1, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
-            { 1, 1, 1, 0, 1, 1, 0, 1, 0, 1 },
-            { 0, 0, 1, 0, 1, 0, 0, 0, 0, 1 },
-            { 1, 1, 1, 0, 1, 1, 1, 0, 1, 0 },
-            { 1, 0, 1, 1, 1, 1, 0, 1, 0, 0 },
-            { 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 },
-            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1 },
-            { 1, 1, 1, 0, 0, 0, 1, 0, 0, 1 } };
+        = { {1,0,0,0,1,1,1,1,1,1},
+            {1,0,0,0,1,0,0,0,0,0},
+            {1,0,0,0,1,0,1,1,1,0},
+            {1,1,1,1,1,0,1,0,1,0},
+            {0,0,0,1,1,1,1,0,1,0},
+            {1,1,0,1,0,0,0,0,1,0},
+            {0,0,0,1,1,1,0,0,1,0},
+            {1,1,0,0,0,1,0,0,1,1},
+            {1,1,0,1,0,1,1,1,1,0},
+            {1,1,0,1,0,1,0,0,0,0} };
 
     Pair src = make_pair(8,0);
     Pair dest = make_pair(0,0);
-    AStar(grid, src, dest);
+    // AStar(grid, src, dest);
 
-    //AStar();
+    
+    vector<Node> graph1;
+    graph1.resize(5);
+
+    graph1[0].id = 0;
+    graph1[0].neighbors.push_back(std::make_pair(1, 6.0));
+    graph1[0].neighbors.push_back(std::make_pair(2, 2.0));
+
+    graph1[1].id = 1;
+    graph1[1].neighbors.push_back(std::make_pair(0, 6.0));
+    graph1[1].neighbors.push_back(std::make_pair(2, 2.0));
+    graph1[1].neighbors.push_back(std::make_pair(3, 5.0));
+
+    graph1[2].id = 2;
+    graph1[2].neighbors.push_back(std::make_pair(0, 2.0));
+    graph1[2].neighbors.push_back(std::make_pair(1, 2.0));
+    graph1[2].neighbors.push_back(std::make_pair(3, 2.0));
+
+    graph1[3].id = 3;
+    graph1[3].neighbors.push_back(std::make_pair(1, 5.0));
+    graph1[3].neighbors.push_back(std::make_pair(2, 2.0));
+    graph1[3].neighbors.push_back(std::make_pair(4, 3.0));
+
+    graph1[4].id = 4;
+    graph1[4].neighbors.push_back(std::make_pair(3, 3.0));
+    
+    /*
+    vector<Node> graph2;
+
+    // Resize to fit 10 nodes
+    graph2.resize(10);
+
+    // Node 0  
+    graph2[0].id = 0;
+    graph2[0].neighbors.push_back(std::make_pair(1, 7));
+    graph2[0].neighbors.push_back(std::make_pair(2, 4));
+
+    // Node 1
+    graph2[1].id = 1;
+    graph2[1].neighbors.push_back(std::make_pair(0, 7));
+    graph2[1].neighbors.push_back(std::make_pair(3, 2));
+    graph2[1].neighbors.push_back(std::make_pair(4, 5));
+
+    // Node 2
+    graph2[2].id = 2;
+    graph2[2].neighbors.push_back(std::make_pair(0, 4));
+    graph2[2].neighbors.push_back(std::make_pair(5, 8));
+
+    // Node 3
+    graph2[3].id = 3;
+    graph2[3].neighbors.push_back(std::make_pair(1, 2));
+    graph2[3].neighbors.push_back(std::make_pair(6, 9));
+
+    // Node 4
+    graph2[4].id = 4;
+    graph2[4].neighbors.push_back(std::make_pair(1, 5));
+    graph2[4].neighbors.push_back(std::make_pair(7, 6));
+
+    // Node 5
+    graph2[5].id = 5;
+    graph2[5].neighbors.push_back(std::make_pair(2, 8));
+    graph2[5].neighbors.push_back(std::make_pair(8, 3));
+
+    // Node 6
+    graph2[6].id = 6;
+    graph2[6].neighbors.push_back(std::make_pair(3, 9));
+    graph2[6].neighbors.push_back(std::make_pair(9, 1));
+
+    // Node 7
+    graph2[7].id = 7;
+    graph2[7].neighbors.push_back(std::make_pair(4, 6));
+    graph2[7].neighbors.push_back(std::make_pair(8, 7));
+
+    // Node 8
+    graph2[8].id = 8;
+    graph2[8].neighbors.push_back(std::make_pair(5, 3));
+    graph2[8].neighbors.push_back(std::make_pair(7, 7));
+    graph2[8].neighbors.push_back(std::make_pair(9, 4));
+
+    // Node 9
+    graph2[9].id = 9;
+    graph2[9].neighbors.push_back(std::make_pair(6, 1));
+    graph2[9].neighbors.push_back(std::make_pair(8, 4));
+    */
+
+    int fromV = 0;
+    int toV = 4;
+    int result = AStar(graph1, fromV, toV);
+    cout << "Shortest path from " << fromV << " to " << toV << " is " << result << " length" << endl;
 
     //end runtime
     auto end2 = std::chrono::high_resolution_clock::now();
     
     //calculate runtime
     std::chrono::duration<double> duration2 = end2 - start2;
-    std::cout << "Runtime (Bellman-Ford): " << duration2.count() << " seconds" << std::endl;
+    std::cout << "Runtime (A*): " << duration2.count() << " seconds" << std::endl;
 
     return 0;
 }

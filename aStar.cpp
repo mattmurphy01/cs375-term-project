@@ -6,11 +6,19 @@ bool isValid(int row, int col) {
     return (row >= 0) && (row < ROW) && (col >= 0) && (col < COL);
 }
 
+bool isValid(int nodeId, const vector<Node>& graph) {
+    return (nodeId >= 0) && (nodeId < graph.size());
+}
+
 bool isUnblocked(int grid[][COL], int row, int col) {
     if(grid[row][col] == 1) 
         return true;
     else
         return false;
+}
+
+bool isUnblocked(const vector<Node>& graph, int nodeId) {
+    return true;
 }
 
 bool isDest(int row, int col, Pair dest) {
@@ -20,10 +28,21 @@ bool isDest(int row, int col, Pair dest) {
         return false;
 }
 
+bool isDest(int nodeId, int destId) {
+    return nodeId == destId;
+}
+
 double calculateHVal(int row, int col, Pair dest) {
     return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
 }
 
+double calculateHVal(int nodeId, int destId) {
+    int dx = abs(nodeId % COL - destId % COL);
+    int dy = abs(nodeId / COL - destId / COL);
+    return dx + dy;
+}
+
+/*
 void tracePath(Cell currCell[][COL], Pair dest) {
     cout << "Path: ";
     int row = dest.first;
@@ -48,7 +67,28 @@ void tracePath(Cell currCell[][COL], Pair dest) {
     cout << endl;
     return;
 }
+*/
 
+void tracePath(map<int, Cell> cellDetails, int destId) {
+    cout << "Path: ";
+    stack<int> Path;
+    int temp_id = destId;
+
+    while (cellDetails[temp_id].parent_id != temp_id) {
+        Path.push(temp_id);
+        temp_id = cellDetails[temp_id].parent_id;
+    }
+
+    Path.push(temp_id);
+    while (!Path.empty()) {
+        int p = Path.top();
+        Path.pop();
+        cout << "-> " << p << " ";
+    }
+    cout << endl;
+}
+
+/*
 void AStar(int grid[][COL], Pair src, Pair dest) {
     // check if source or destination are out of range
     if(isValid(src.first, src.second) == false) {
@@ -118,7 +158,7 @@ void AStar(int grid[][COL], Pair src, Pair dest) {
             if(isDest(i - 1, j, dest) == true) { // if dest == current successor
                 cellDetails[i - 1][j].parent_i = i;
                 cellDetails[i - 1][j].parent_j = j;
-                cout << "The destination is found" << endl;
+                // cout << "The destination is found" << endl;
                 tracePath(cellDetails, dest);
                 found = true;
                 return;
@@ -146,7 +186,7 @@ void AStar(int grid[][COL], Pair src, Pair dest) {
             if(isDest(i+1, j, dest) == true) { // if dest == current successor
                 cellDetails[i+1][j].parent_i = i;
                 cellDetails[i+1][j].parent_j = j;
-                cout << "The destination is found" << endl;
+                // cout << "The destination is found" << endl;
                 tracePath(cellDetails, dest);
                 found = true;
                 return;
@@ -174,7 +214,7 @@ void AStar(int grid[][COL], Pair src, Pair dest) {
             if(isDest(i, j+1, dest) == true) { // if dest == current successor
                 cellDetails[i][j+1].parent_i = i;
                 cellDetails[i][j+1].parent_j = j;
-                cout << "The destination is found" << endl;
+                // cout << "The destination is found" << endl;
                 tracePath(cellDetails, dest);
                 found = true;
                 return;
@@ -202,7 +242,7 @@ void AStar(int grid[][COL], Pair src, Pair dest) {
             if(isDest(i, j-1, dest) == true) { // if dest == current successor
                 cellDetails[i][j-1].parent_i = i;
                 cellDetails[i][j-1].parent_j = j;
-                cout << "The destination is found" << endl;
+                // cout << "The destination is found" << endl;
                 tracePath(cellDetails, dest);
                 found = true;
                 return;
@@ -230,7 +270,7 @@ void AStar(int grid[][COL], Pair src, Pair dest) {
             if(isDest(i-1, j+1, dest) == true) { // if dest == current successor
                 cellDetails[i-1][j+1].parent_i = i;
                 cellDetails[i-1][j+1].parent_j = j;
-                cout << "The destination is found" << endl;
+                // cout << "The destination is found" << endl;
                 tracePath(cellDetails, dest);
                 found = true;
                 return;
@@ -258,7 +298,7 @@ void AStar(int grid[][COL], Pair src, Pair dest) {
             if(isDest(i-1, j-1, dest) == true) { // if dest == current successor
                 cellDetails[i-1][j-1].parent_i = i;
                 cellDetails[i-1][j-1].parent_j = j;
-                cout << "The destination is found" << endl;
+                // cout << "The destination is found" << endl;
                 tracePath(cellDetails, dest);
                 found = true;
                 return;
@@ -286,7 +326,7 @@ void AStar(int grid[][COL], Pair src, Pair dest) {
             if(isDest(i+1, j+1, dest) == true) { // if dest == current successor
                 cellDetails[i+1][j+1].parent_i = i;
                 cellDetails[i+1][j+1].parent_j = j;
-                cout << "The destination is found" << endl;
+                // cout << "The destination is found" << endl;
                 tracePath(cellDetails, dest);
                 found = true;
                 return;
@@ -314,7 +354,7 @@ void AStar(int grid[][COL], Pair src, Pair dest) {
             if(isDest(i+1, j-1, dest) == true) { // if dest == current successor
                 cellDetails[i+1][j-1].parent_i = i;
                 cellDetails[i+1][j-1].parent_j = j;
-                cout << "The destination is found" << endl;
+                // cout << "The destination is found" << endl;
                 tracePath(cellDetails, dest);
                 found = true;
                 return;
@@ -344,3 +384,85 @@ void AStar(int grid[][COL], Pair src, Pair dest) {
     }
     return;
 }
+*/
+
+double AStar(const vector<Node>& graph, int srcId, int destId) {
+    if (!isValid(srcId, graph) || !isValid(destId, graph)) {
+        cout << "Source or destination is invalid" << endl;
+        return -1.0;
+    }
+
+    if (!isUnblocked(graph, srcId) || !isUnblocked(graph, destId)) {
+        cout << "Source or destination is blocked" << endl;
+        return -1.0;
+    }
+
+    if (isDest(srcId, destId)) {
+        cout << "Already at the destination" << endl;
+        return 0;
+    }
+
+    set<dPair> openSet;
+    map<int, Cell> cellDetails;
+
+    for (int i = 0; i < graph.size(); i++) {
+        cellDetails[i].f = FLT_MAX;
+        cellDetails[i].g = FLT_MAX;
+        cellDetails[i].h = FLT_MAX;
+        cellDetails[i].parent_id = -1;
+    }
+
+    // Initialize the start node
+    int i = srcId;
+    cellDetails[i].f = 0.0;
+    cellDetails[i].g = 0.0;
+    cellDetails[i].h = calculateHVal(srcId, destId);
+    cellDetails[i].parent_id = i;
+
+    openSet.insert(make_pair(0.0, srcId));
+
+    bool foundDest = false;
+
+    while (!openSet.empty()) {
+        dPair p = *openSet.begin();
+        openSet.erase(openSet.begin());
+
+        int node = p.second;
+
+        // Iterate over the neighbors of the current node
+        for (const auto& neighbor : graph[node].neighbors) {
+            int neighborId = neighbor.first;
+            double neighborCost = neighbor.second;
+
+            if (isDest(neighborId, destId)) {
+                cellDetails[neighborId].parent_id = node;
+                tracePath(cellDetails, destId);
+                foundDest = true;
+                // break;
+            }
+
+            double gNew = cellDetails[node].g + neighborCost;
+            double hNew = calculateHVal(neighborId, destId);
+            double fNew = gNew + hNew;
+
+            if (cellDetails[neighborId].f == FLT_MAX || cellDetails[neighborId].f > fNew) {
+                openSet.insert(make_pair(fNew, neighborId));
+                cellDetails[neighborId].f = fNew;
+                cellDetails[neighborId].g = gNew;
+                cellDetails[neighborId].h = hNew;
+                cellDetails[neighborId].parent_id = node;
+            }
+        }
+
+        if (foundDest) {
+            // break;
+            return cellDetails[destId].g;
+        }
+    }
+
+    if (!foundDest) {
+        cout << "Failed to find the destination node" << endl;
+        return -1.0;
+    }
+}
+
