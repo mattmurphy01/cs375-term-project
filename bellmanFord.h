@@ -3,11 +3,15 @@
 
 #include <vector>
 #include <limits>
+
+#include "graph.h"
 using namespace std;
 
+/*
 struct Edge {
     int from, to, weight;
 };
+*/
 
 class BellmanFord {
 public:

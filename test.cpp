@@ -3,6 +3,7 @@
 
 //#include "test.h"
 #include "bellmanFord.h"
+#include "aStar.h"
 using namespace std;
 
 int main(int argc, char const *argv[]) {
@@ -46,6 +47,21 @@ int main(int argc, char const *argv[]) {
     //calculate runtime
     std::chrono::duration<double> duration = end - start;
     std::cout << "Runtime (Bellman-Ford): " << duration.count() << " seconds" << std::endl;
+
+    int grid[ROW][COL]
+        = { { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1 },
+            { 1, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
+            { 1, 1, 1, 0, 1, 1, 0, 1, 0, 1 },
+            { 0, 0, 1, 0, 1, 0, 0, 0, 0, 1 },
+            { 1, 1, 1, 0, 1, 1, 1, 0, 1, 0 },
+            { 1, 0, 1, 1, 1, 1, 0, 1, 0, 0 },
+            { 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1 },
+            { 1, 1, 1, 0, 0, 0, 1, 0, 0, 1 } };
+
+    Pair src = make_pair(8,0);
+    Pair dest = make_pair(0,0);
+    AStar(grid, src, dest);
 
     //AStar();
     return 0;

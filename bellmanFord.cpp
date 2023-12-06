@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "bellmanFord.h"
+#include "graph.h"
 using namespace std;
 
 BellmanFord::BellmanFord(int vertices, int edges) : V(vertices), E(edges) {}

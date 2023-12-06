@@ -8,19 +8,19 @@ test: test.o bellmanFord.o aStar.o graph.o
 	$(CXX) $(CFLAGS) -o test test.o bellmanFord.o aStar.o
 
 # Compile test.cpp 
-test.o: test.cpp test.h
+test.o: test.cpp
 	$(CXX) $(CFLAGS) -c test.cpp
 
 # Compile bellmanFord.cpp 
-bellmanFord.o: bellmanFord.cpp test.h
+bellmanFord.o: bellmanFord.cpp bellmanFord.h graph.h
 	$(CXX) $(CFLAGS) -c bellmanFord.cpp
 
 # Compile aStar.cpp 
-aStar.o: aStar.cpp test.h
+aStar.o: aStar.cpp aStar.h
 	$(CXX) $(CFLAGS) -c aStar.cpp
 
 # Compile graph.cpp
-graph.o: graph.cpp test.h
+graph.o: graph.cpp graph.h
 	$(CXX) $(CFLAGS) -c graph.cpp
 
 # Clean 
