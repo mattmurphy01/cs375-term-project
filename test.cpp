@@ -6,9 +6,10 @@
 using namespace std;
 
 int main(int argc, char const *argv[]) {
-        /* Bellman-Ford Algorithm */
+    /* Bellman-Ford Algorithm */
+    std::cout << "***** Bellman-Ford Algorithm test *****\n";
     // start runtime
-    auto start = std::chrono::high_resolution_clock::now();
+    auto start1 = std::chrono::high_resolution_clock::now();
 
     int V = 5; // Number of vertices in graph
     int E = 8; // Number of edges in graph
@@ -41,12 +42,26 @@ int main(int argc, char const *argv[]) {
     }
 
     //end runtime
-    auto end = std::chrono::high_resolution_clock::now();
+    auto end1 = std::chrono::high_resolution_clock::now();
     
     //calculate runtime
-    std::chrono::duration<double> duration = end - start;
-    std::cout << "Runtime (Bellman-Ford): " << duration.count() << " seconds" << std::endl;
+    std::chrono::duration<double> duration1 = end1 - start1;
+    std::cout << "Runtime (Bellman-Ford): " << duration1.count() << " seconds" << std::endl;
+
+    /* A* Algorithm */
+    std::cout << "\n***** A* Algorithm test ******\n";
+
+    // start runtime
+    auto start2 = std::chrono::high_resolution_clock::now();
 
     //AStar();
+
+    //end runtime
+    auto end2 = std::chrono::high_resolution_clock::now();
+    
+    //calculate runtime
+    std::chrono::duration<double> duration2 = end2 - start2;
+    std::cout << "Runtime (Bellman-Ford): " << duration2.count() << " seconds" << std::endl;
+
     return 0;
 }
