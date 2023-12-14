@@ -72,28 +72,31 @@ vector<Node> createRandomGraph(int n) {
 }
 */
 
-GraphData createRandomGraph(int n) {
+GraphData createRandomGraph(int numNodes, int numEdges) {
     GraphData graphData;
-    graphData.nodes.resize(n);
+    graphData.nodes.resize(numNodes);
 
     srand(time(nullptr));
 
-    for(int i = 0; i < n; ++i) {
-        graphData.nodes[i].id = i;
-        int numConnections = rand() % 10 + 1;
+    // Populate edges
+    while (graphData.edges.size() < numEdges) {
+        int from = rand() % numNodes;
+        int to = rand() % numNodes;
 
-        for(int j = 0; j < numConnections; ++j) {
-            int neighborId = rand() % n;
+        // Avoid self-loops and ensure limited number of outgoing connections
+        if (from != to && graphData.nodes[from].neighbors.size() < 10) {
+            double weight = rand() % 100 + 1;  // Random weight between 1 and 100
 
-            if(i != neighborId && find_if(graphData.nodes[i].neighbors.begin(), graphData.nodes[i].neighbors.end(), [neighborId](const pair<int, double>& p) { return p.first == neighborId; }) == graphData.nodes[i].neighbors.end()) {
-                double weight = rand() % 100 + 1;
-                graphData.nodes[i].neighbors.push_back(make_pair(neighborId, weight));
+            // Add to Node structure for A*
+            graphData.nodes[from].neighbors.push_back(std::make_pair(to, weight));
 
-                Edge edge = {i, neighborId, static_cast<int>(weight)};
-                graphData.edges.push_back(edge);
-            }
-        }        
+            // Add to Edge structure for Bellman-Ford
+            Edge edge = {from, to, static_cast<int>(weight)};
+            graphData.edges.push_back(edge);
+        }
     }
+
+    return graphData;
 }
 
 
@@ -228,12 +231,13 @@ int main(int argc, char const *argv[]) {
     graph1[4].neighbors.push_back(std::make_pair(3, 3.0));
 
     int numNodes = 100;
+    int numEdges = 100;
     // vector<Node> randomGraph = createRandomGraph(numNodes);
-    GraphData randomGraph = createRandomGraph(numNodes);
+    GraphData randomGraph = createRandomGraph(numNodes, numEdges);
     printGraph(randomGraph.nodes);
 
     int fromV = 3;
-    int toV = 20;
+    int toV = 10;
     int result = AStar(randomGraph.nodes, fromV, toV);
     cout << "Shortest path from " << fromV << " to " << toV << " is " << result << " length" << endl;
 
