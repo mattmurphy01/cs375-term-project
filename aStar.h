@@ -12,8 +12,8 @@
 #include "graph.h"
 using namespace std;
 
-#define ROW 10
-#define COL 10
+#define ROW 100
+#define COL 100
 
 typedef pair<int, int> Pair;
 typedef pair<double, pair<int, int>> doublePair;
@@ -43,26 +43,18 @@ struct Cell {
 };
 
 // checks if a node is a valid cell, is row and column number in range?
-// bool isValid(int row, int col);
-bool isValid(int nodeId);
-
-// checks if cell is blocked or not
-// bool isUnblocked(int grid[][COL], int row, int col);
-bool isUnblocked(int nodeId);
+bool isValid(int nodeId, const vector<Node>& graph);
 
 // checks if destination cell was reached
-// bool isDest(int row, int col, Pair dest);
+bool isDest(int nodeId, int destId);
 
 // calculate utility value 'h'
-// double calculateHVal(int row, int col, Pair dest);
 double calculateHVal(int nodeId, int destId);
 
 // trace path from source to destination
-// void tracePath(Cell cellDetails[][COL], Pair dest);
-void tracePath(map<int, Node> nodeDetails, int destId);
+void tracePath(map<int, Cell> cellDetails, int destId);
 
 // shortest path A* algorithm
-// void AStar(int grid[][COL], Pair src, Pair dest);
 double AStar(const vector<Node>& graph, int srcId, int destId);
 
 #endif //ASTAR_H

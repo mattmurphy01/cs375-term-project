@@ -4,7 +4,13 @@
 //#include "test.h"
 #include "bellmanFord.h"
 #include "aStar.h"
+// #include "random-graph.cpp"
 using namespace std;
+
+struct GraphData {
+    vector<Node> nodes; // A*
+    vector<Edge> edges; // Bellman-Ford
+};
 
 vector<Node> createGraph(int numRows, int numCols, double defaultCost = 1.0) {
     int numNodes = numRows * numCols;
@@ -41,6 +47,64 @@ vector<Node> createGraph(int numRows, int numCols, double defaultCost = 1.0) {
     }
 
     return graph;
+}
+
+/*
+vector<Node> createRandomGraph(int n) {
+    vector<Node> graph(n);
+
+    srand(time(nullptr));
+
+    for (int i = 0; i < n; ++i) {
+        graph[i].id = i;
+        int numConnections = rand() % 10 + 1;
+        for(int j = 0; j < numConnections; ++j) {
+            int neighborId = rand() % n;
+
+            if(i != neighborId && find_if(graph[i].neighbors.begin(), graph[i].neighbors.end(), [neighborId](const pair<int, double>& p) { return p.first == neighborId; }) == graph[i].neighbors.end()) {
+
+                double weight = rand() %  100 + 1;
+                graph[i].neighbors.push_back(make_pair(neighborId, weight));
+            }
+        }
+    }
+    return graph;
+}
+*/
+
+GraphData createRandomGraph(int n) {
+    GraphData graphData;
+    graphData.nodes.resize(n);
+
+    srand(time(nullptr));
+
+    for(int i = 0; i < n; ++i) {
+        graphData.nodes[i].id = i;
+        int numConnections = rand() % 10 + 1;
+
+        for(int j = 0; j < numConnections; ++j) {
+            int neighborId = rand() % n;
+
+            if(i != neighborId && find_if(graphData.nodes[i].neighbors.begin(), graphData.nodes[i].neighbors.end(), [neighborId](const pair<int, double>& p) { return p.first == neighborId; }) == graphData.nodes[i].neighbors.end()) {
+                double weight = rand() % 100 + 1;
+                graphData.nodes[i].neighbors.push_back(make_pair(neighborId, weight));
+
+                Edge edge = {i, neighborId, static_cast<int>(weight)};
+                graphData.edges.push_back(edge);
+            }
+        }        
+    }
+}
+
+
+void printGraph(const vector<Node>& graph) {
+    for(const Node& node : graph) {
+        cout << "Node " << node.id << " connects to: ";
+        for(const auto& neighbor : node.neighbors) {
+            cout << "[Node " << neighbor.first << ", Weight: " << neighbor.second << "] ";
+        }
+        cout << endl;
+    }
 }
 
 int main(int argc, char const *argv[]) {
@@ -137,24 +201,7 @@ int main(int argc, char const *argv[]) {
 
     // start runtime
     auto start2 = std::chrono::high_resolution_clock::now();
-    
-    int grid[ROW][COL]
-        = { {1,0,0,0,1,1,1,1,1,1},
-            {1,0,0,0,1,0,0,0,0,0},
-            {1,0,0,0,1,0,1,1,1,0},
-            {1,1,1,1,1,0,1,0,1,0},
-            {0,0,0,1,1,1,1,0,1,0},
-            {1,1,0,1,0,0,0,0,1,0},
-            {0,0,0,1,1,1,0,0,1,0},
-            {1,1,0,0,0,1,0,0,1,1},
-            {1,1,0,1,0,1,1,1,1,0},
-            {1,1,0,1,0,1,0,0,0,0} };
-
-    Pair src = make_pair(8,0);
-    Pair dest = make_pair(0,0);
-    // AStar(grid, src, dest);
-
-    
+        
     vector<Node> graph1;
     graph1.resize(5);
 
@@ -179,69 +226,15 @@ int main(int argc, char const *argv[]) {
 
     graph1[4].id = 4;
     graph1[4].neighbors.push_back(std::make_pair(3, 3.0));
-    
-    /*
-    vector<Node> graph2;
 
-    // Resize to fit 10 nodes
-    graph2.resize(10);
+    int numNodes = 100;
+    // vector<Node> randomGraph = createRandomGraph(numNodes);
+    GraphData randomGraph = createRandomGraph(numNodes);
+    printGraph(randomGraph.nodes);
 
-    // Node 0  
-    graph2[0].id = 0;
-    graph2[0].neighbors.push_back(std::make_pair(1, 7));
-    graph2[0].neighbors.push_back(std::make_pair(2, 4));
-
-    // Node 1
-    graph2[1].id = 1;
-    graph2[1].neighbors.push_back(std::make_pair(0, 7));
-    graph2[1].neighbors.push_back(std::make_pair(3, 2));
-    graph2[1].neighbors.push_back(std::make_pair(4, 5));
-
-    // Node 2
-    graph2[2].id = 2;
-    graph2[2].neighbors.push_back(std::make_pair(0, 4));
-    graph2[2].neighbors.push_back(std::make_pair(5, 8));
-
-    // Node 3
-    graph2[3].id = 3;
-    graph2[3].neighbors.push_back(std::make_pair(1, 2));
-    graph2[3].neighbors.push_back(std::make_pair(6, 9));
-
-    // Node 4
-    graph2[4].id = 4;
-    graph2[4].neighbors.push_back(std::make_pair(1, 5));
-    graph2[4].neighbors.push_back(std::make_pair(7, 6));
-
-    // Node 5
-    graph2[5].id = 5;
-    graph2[5].neighbors.push_back(std::make_pair(2, 8));
-    graph2[5].neighbors.push_back(std::make_pair(8, 3));
-
-    // Node 6
-    graph2[6].id = 6;
-    graph2[6].neighbors.push_back(std::make_pair(3, 9));
-    graph2[6].neighbors.push_back(std::make_pair(9, 1));
-
-    // Node 7
-    graph2[7].id = 7;
-    graph2[7].neighbors.push_back(std::make_pair(4, 6));
-    graph2[7].neighbors.push_back(std::make_pair(8, 7));
-
-    // Node 8
-    graph2[8].id = 8;
-    graph2[8].neighbors.push_back(std::make_pair(5, 3));
-    graph2[8].neighbors.push_back(std::make_pair(7, 7));
-    graph2[8].neighbors.push_back(std::make_pair(9, 4));
-
-    // Node 9
-    graph2[9].id = 9;
-    graph2[9].neighbors.push_back(std::make_pair(6, 1));
-    graph2[9].neighbors.push_back(std::make_pair(8, 4));
-    */
-
-    int fromV = 0;
-    int toV = 4;
-    int result = AStar(graph1, fromV, toV);
+    int fromV = 3;
+    int toV = 20;
+    int result = AStar(randomGraph.nodes, fromV, toV);
     cout << "Shortest path from " << fromV << " to " << toV << " is " << result << " length" << endl;
 
     //end runtime

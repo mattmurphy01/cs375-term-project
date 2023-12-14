@@ -23,6 +23,10 @@ aStar.o: aStar.cpp aStar.h
 graph.o: graph.cpp graph.h
 	$(CXX) $(CFLAGS) -c graph.cpp
 
+# Compile random-graph.cpp
+random-graph.o: random-graph.cpp
+	$(CXX) $(CFLAGS) -c random-graph.cpp
+
 # Clean 
 clean:
 	rm -f *.o test
