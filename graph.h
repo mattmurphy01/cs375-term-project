@@ -3,11 +3,18 @@
 
 #include <list>
 #include <vector>
+#include <utility>
+using namespace std;
 
 struct Edge {
     int from;
     int to;
     int weight;
+};
+
+struct Node {
+    int id;
+    vector<pair<int, double>> neighbors;
 };
 
 class Graph {
@@ -17,7 +24,7 @@ public:
     void printGraph();
 
 private:
-    std::vector<std::list<Edge>> adjList; // Adjacency list representation
+    
 };
 
 #endif // GRAPH_H

@@ -19,10 +19,12 @@ typedef pair<int, int> Pair;
 typedef pair<double, pair<int, int>> doublePair;
 typedef pair<double, int> dPair;
 
+/*
 struct Node {
     int id;
     vector<pair<int, double>> neighbors;
 };
+*/
 
 /*
 // holds necessary parameters for algorithm

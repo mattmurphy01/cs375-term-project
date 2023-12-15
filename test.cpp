@@ -1,9 +1,11 @@
 #include <iostream>
 #include <chrono>
+#include <iomanip>
 
 //#include "test.h"
 #include "bellmanFord.h"
 #include "aStar.h"
+#include "graph.h"
 // #include "random-graph.cpp"
 using namespace std;
 
@@ -49,7 +51,7 @@ vector<Node> createGraph(int numRows, int numCols, double defaultCost = 1.0) {
     return graph;
 }
 
-/*
+
 vector<Node> createRandomGraph(int n) {
     vector<Node> graph(n);
 
@@ -57,7 +59,7 @@ vector<Node> createRandomGraph(int n) {
 
     for (int i = 0; i < n; ++i) {
         graph[i].id = i;
-        int numConnections = rand() % 10 + 1;
+        int numConnections = rand() % 5 + 1;
         for(int j = 0; j < numConnections; ++j) {
             int neighborId = rand() % n;
 
@@ -70,8 +72,8 @@ vector<Node> createRandomGraph(int n) {
     }
     return graph;
 }
-*/
 
+/*
 GraphData createRandomGraph(int numNodes, int numEdges) {
     GraphData graphData;
     graphData.nodes.resize(numNodes);
@@ -98,6 +100,7 @@ GraphData createRandomGraph(int numNodes, int numEdges) {
 
     return graphData;
 }
+*/
 
 
 void printGraph(const vector<Node>& graph) {
@@ -112,6 +115,14 @@ void printGraph(const vector<Node>& graph) {
 
 int main(int argc, char const *argv[]) {
     /* Bellman-Ford Algorithm */
+
+    // create random graph
+    int numNodes = 100;
+    int numEdges = 100;
+    vector<Node> randomGraph = createRandomGraph(numNodes);
+    // GraphData randomGraph = createRandomGraph(numNodes, numEdges);
+    printGraph(randomGraph);
+
     std::cout << "***** Bellman-Ford Algorithm test *****\n";
     // start runtime
     auto start1 = std::chrono::high_resolution_clock::now();
@@ -120,7 +131,7 @@ int main(int argc, char const *argv[]) {
     int E = 8; // Number of edges in graph
     
     // initialize graph
-    BellmanFord graph(V, E);
+    BellmanFord graph(randomGraph);
     
     // graph to test
     
@@ -135,57 +146,23 @@ int main(int argc, char const *argv[]) {
     graph.addEdge(4, 3, 3);
     */
 
-    
+    /*
     graph.addEdge(0,2,6);
     graph.addEdge(0,2,2);
     graph.addEdge(1,2,2);
     graph.addEdge(1,3,5);
     graph.addEdge(2,3,2);
     graph.addEdge(3,4,3);
-    
-
-    /*
-    graph.addEdge(0, 1, 7);
-    graph.addEdge(0, 2, 4);
-
-    graph.addEdge(1, 0, 7);
-    graph.addEdge(1, 3, 2);
-    graph.addEdge(1, 4, 5);
-
-    graph.addEdge(2, 0, 4);
-    graph.addEdge(2, 5, 8);
-
-    graph.addEdge(3, 1, 2);
-    graph.addEdge(3, 6, 9);
-
-    graph.addEdge(4, 1, 5);
-    graph.addEdge(4, 7, 6);
-
-    graph.addEdge(5, 2, 8);
-    graph.addEdge(5, 8, 3);
-
-    graph.addEdge(6, 3, 9);
-    graph.addEdge(6, 9, 1);
-
-    graph.addEdge(7, 4, 6);
-    graph.addEdge(7, 8, 7);
-
-    graph.addEdge(8, 5, 3);
-    graph.addEdge(8, 7, 7);
-    graph.addEdge(8, 9, 4);
-
-    graph.addEdge(9, 6, 1);
-    graph.addEdge(9, 8, 4);
     */
 
-    int from = 0;   // source node
+    int from = 5;   // source node
  
     std::vector<int> shortestDistances = graph.shortestPath(from);
 
     if (shortestDistances.empty()) std::cout << "Graph contains negative weight cycle!\n";
     else {
         std::cout << "Shortest distances from vertex " << from << " to other vertices:\n";
-        for (int i = 0; i < V; ++i) {
+        for (int i = 0; i < numNodes; ++i) {
             std::cout << "Vertex " << i << ": ";
             if (shortestDistances[i] == std::numeric_limits<int>::max()) std::cout << "INF\n";  // path from source to destination does not exist
             else std::cout << shortestDistances[i] << "\n"; // shortest distance from source to destination
@@ -203,43 +180,14 @@ int main(int argc, char const *argv[]) {
     std::cout << "\n***** A* Algorithm test ******\n";
 
     // start runtime
-    auto start2 = std::chrono::high_resolution_clock::now();
-        
-    vector<Node> graph1;
-    graph1.resize(5);
+    auto start2 = std::chrono::high_resolution_clock::now();   
 
-    graph1[0].id = 0;
-    graph1[0].neighbors.push_back(std::make_pair(1, 6.0));
-    graph1[0].neighbors.push_back(std::make_pair(2, 2.0));
-
-    graph1[1].id = 1;
-    graph1[1].neighbors.push_back(std::make_pair(0, 6.0));
-    graph1[1].neighbors.push_back(std::make_pair(2, 2.0));
-    graph1[1].neighbors.push_back(std::make_pair(3, 5.0));
-
-    graph1[2].id = 2;
-    graph1[2].neighbors.push_back(std::make_pair(0, 2.0));
-    graph1[2].neighbors.push_back(std::make_pair(1, 2.0));
-    graph1[2].neighbors.push_back(std::make_pair(3, 2.0));
-
-    graph1[3].id = 3;
-    graph1[3].neighbors.push_back(std::make_pair(1, 5.0));
-    graph1[3].neighbors.push_back(std::make_pair(2, 2.0));
-    graph1[3].neighbors.push_back(std::make_pair(4, 3.0));
-
-    graph1[4].id = 4;
-    graph1[4].neighbors.push_back(std::make_pair(3, 3.0));
-
-    int numNodes = 100;
-    int numEdges = 100;
-    // vector<Node> randomGraph = createRandomGraph(numNodes);
-    GraphData randomGraph = createRandomGraph(numNodes, numEdges);
-    printGraph(randomGraph.nodes);
-
-    int fromV = 3;
-    int toV = 10;
-    int result = AStar(randomGraph.nodes, fromV, toV);
-    cout << "Shortest path from " << fromV << " to " << toV << " is " << result << " length" << endl;
+    int fromV = 5;
+    int toV = 99;
+    int result = AStar(randomGraph, fromV, toV);
+    if(result != -1) {
+        cout << "Shortest path from " << fromV << " to " << toV << " is " << result << " length" << endl;
+    }
 
     //end runtime
     auto end2 = std::chrono::high_resolution_clock::now();

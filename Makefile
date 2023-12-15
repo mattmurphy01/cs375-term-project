@@ -8,7 +8,7 @@ test: test.o bellmanFord.o aStar.o graph.o
 	$(CXX) $(CFLAGS) -o test test.o bellmanFord.o aStar.o
 
 # Compile test.cpp 
-test.o: test.cpp
+test.o: test.cpp test.h
 	$(CXX) $(CFLAGS) -c test.cpp
 
 # Compile bellmanFord.cpp 

@@ -14,6 +14,15 @@ struct Edge {
 */
 
 class BellmanFord {
+    public:
+        BellmanFord(const vector<Node>& graph) : graph(graph) {}
+        vector<int> shortestPath(int source);
+    private:
+        vector<Node> graph;
+};
+
+/*
+class BellmanFord {
 public:
     BellmanFord(int vertices, int edges);
     void addEdge(int from, int to, int weight);
@@ -23,5 +32,6 @@ private:
     int V, E;
     std::vector<Edge> edges;
 };
+*/
 
 #endif //BELLMANFORD_H
