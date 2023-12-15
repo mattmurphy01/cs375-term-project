@@ -53,19 +53,23 @@ vector<Node> createGraph(int numRows, int numCols, double defaultCost = 1.0) {
 
 
 vector<Node> createRandomGraph(int n) {
+    int maxDegree = 2;
     vector<Node> graph(n);
 
     srand(time(nullptr));
 
     for (int i = 0; i < n; ++i) {
         graph[i].id = i;
-        int numConnections = rand() % 5 + 1;
+        int numConnections = rand() % maxDegree + 1;
         for(int j = 0; j < numConnections; ++j) {
             int neighborId = rand() % n;
 
             if(i != neighborId && find_if(graph[i].neighbors.begin(), graph[i].neighbors.end(), [neighborId](const pair<int, double>& p) { return p.first == neighborId; }) == graph[i].neighbors.end()) {
-
+                bool isNegative = rand() % 4 == 0; // 25% chance of being negative
                 double weight = rand() %  100 + 1;
+                if (isNegative) {
+                    weight = -weight; // Make the weight negative
+                }
                 graph[i].neighbors.push_back(make_pair(neighborId, weight));
             }
         }

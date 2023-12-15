@@ -18,10 +18,6 @@ bool isDest(int nodeId, int destId) {
     return nodeId == destId;
 }
 
-double calculateHVal(int row, int col, Pair dest) {
-    return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
-}
-
 double calculateHVal(int nodeId, int destId) {
     int dx = abs(nodeId % COL - destId % COL);
     int dy = abs(nodeId / COL - destId / COL);
