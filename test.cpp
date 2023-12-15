@@ -127,7 +127,8 @@ int main(int argc, char const *argv[]) {
     int toV = 99;
     printGraph(randomGraph);
 
-    std::cout << "***** Bellman-Ford Algorithm test *****\n";
+    std::cout << "\nShortest path from " << fromV << " to " << toV << ":\n";
+    std::cout << "\n***** Bellman-Ford Algorithm test *****\n";
     // start runtime
     auto start1 = std::chrono::high_resolution_clock::now();
 
