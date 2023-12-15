@@ -118,50 +118,26 @@ int main(int argc, char const *argv[]) {
 
     // create random graph
     int numNodes = 100;
-    int numEdges = 100;
     vector<Node> randomGraph = createRandomGraph(numNodes);
-    // GraphData randomGraph = createRandomGraph(numNodes, numEdges);
+    int fromV = 5;
+    int toV = 99;
     printGraph(randomGraph);
 
     std::cout << "***** Bellman-Ford Algorithm test *****\n";
     // start runtime
     auto start1 = std::chrono::high_resolution_clock::now();
 
-    int V = 5; // Number of vertices in graph
-    int E = 8; // Number of edges in graph
+    // int V = 5; // Number of vertices in graph
+    // int E = 8; // Number of edges in graph
     
     // initialize graph
     BellmanFord graph(randomGraph);
-    
-    // graph to test
-    
-    /*
-    graph.addEdge(0, 1, 1);
-    graph.addEdge(0, 2, 4);
-    graph.addEdge(1, 2, 3);
-    graph.addEdge(1, 3, 2);
-    graph.addEdge(1, 4, 2);
-    graph.addEdge(3, 2, 5);
-    graph.addEdge(3, 1, 2); // 3
-    graph.addEdge(4, 3, 3);
-    */
-
-    /*
-    graph.addEdge(0,2,6);
-    graph.addEdge(0,2,2);
-    graph.addEdge(1,2,2);
-    graph.addEdge(1,3,5);
-    graph.addEdge(2,3,2);
-    graph.addEdge(3,4,3);
-    */
-
-    int from = 5;   // source node
  
-    std::vector<int> shortestDistances = graph.shortestPath(from);
+    std::vector<int> shortestDistances = graph.shortestPath(fromV);
 
     if (shortestDistances.empty()) std::cout << "Graph contains negative weight cycle!\n";
     else {
-        std::cout << "Shortest distances from vertex " << from << " to other vertices:\n";
+        std::cout << "Shortest distances from vertex " << fromV << " to other vertices:\n";
         for (int i = 0; i < numNodes; ++i) {
             std::cout << "Vertex " << i << ": ";
             if (shortestDistances[i] == std::numeric_limits<int>::max()) std::cout << "INF\n";  // path from source to destination does not exist
@@ -182,8 +158,7 @@ int main(int argc, char const *argv[]) {
     // start runtime
     auto start2 = std::chrono::high_resolution_clock::now();   
 
-    int fromV = 5;
-    int toV = 99;
+    
     int result = AStar(randomGraph, fromV, toV);
     if(result != -1) {
         cout << "Shortest path from " << fromV << " to " << toV << " is " << result << " length" << endl;
